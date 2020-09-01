@@ -98,3 +98,117 @@ Enter the number of months:
 
 Your monthly payment = 112 and the last payment = 104.
 ```
+## Stage 3/4: Annuity payment
+### Description
+Let's compute all the parameters of the credit. There are at least two kinds of credit loans: those with annuity payment and those with differentiated payment. At this stage, you're going to calculate only the annuity payment that is fixed during the whole credit term.
+
+Here is the formula:
+![annuity formula](https://i.imgur.com/0QtfYsy.png)
+Where:
+
+A = annuity payment;
+
+P = credit principal;
+
+i = nominal (monthly) interest rate. Usually, it’s 1/12 of the annual interest rate, and usually, it’s a floating value, not a percentage. For example, if your annual interest rate = 12%, then i = 0.01;
+
+n = number of payments. Usually, it’s the number of months.
+
+You are interested in four values: the number of periods to repay the credit loan, the monthly payment, the credit principal, and the credit interest. Each of these values can be calculated if the others are known:
+
+Credit principal:
+![principal](https://i.imgur.com/7cPDkYT.png)	
+ 
+
+A number of payments:
+![payments](https://i.imgur.com/SGLulb0.png)
+
+Both the annuity payment and the credit principal that your program outputs should be integers. If your calculated annuity payment is not an integer, output its ceiling value (the smallest integer not less than the calculated annuity payment). If your calculated credit principal is not an integer, round it to the nearest integer value.
+
+### Objectives
+At this stage, you should add new functionality to your calculator:
+
+1. First, prompt the user for the parameter they want to calculate. The calculator should be able to calculate the number of periods, the monthly payments, and the credit principal;
+2. Then, prompt the user to input the remaining values;
+3. Finally, compute and output the value that they wanted.
+
+
+Note that the user inputs the interest rate as a percentage, for example, 11.7, so you should divide this value by 100 to use it in the formula above.
+
+Please be accurate when converting "X months" to "Y years and Z months". Avoid writing "0 years and 11 months" (output "11 months" instead) and "1 years and 0 months" (output "1 year" instead).
+
+Note that at this stage you have to ask the user to input the parameters in a predetermined order provided below. Simply disregard the value that the user wants to calculate and follow the rest of the list. For example, it can be the monthly payment if the user typed “a” as an answer to the question “What do you want to calculate?”. Here is the order:
+  * The first is the credit principal;
+  * The second is a monthly payment;
+  * The next is a number of periods;
+  * The last is an interest rate.
+
+Please pay attention to the conversion of your resulting values from float to the integer type. Output the ceiling value for the annuity payment, and the nearest value for the credit principal.
+
+### Examples
+The greater-than symbol followed by a space (> ) represent the user input. Note that these are not part of the input.
+
+#### Example 1:
+```
+What do you want to calculate?
+type "n" for number of monthly payments,
+type "a" for annuity monthly payment amount,
+type "p" for credit principal:
+> n
+Enter the credit principal:
+> 1000000
+Enter the monthly payment:
+> 15000
+Enter the credit interest:
+> 10
+It will take 8 years and 2 months to repay this credit!
+Let’s take a closer look at Example 1.
+
+You know the credit principal and the credit interest, and you want to calculate the number of months. What should you do?
+
+1) You need to know the nominal interest rate. It is calculated like this:
+```
+![i](https://i.imgur.com/6J8dGUL.png)
+```
+2) Now you can calculate the count of periods:
+```
+![periods](https://i.imgur.com/d9Im9tb.png)
+```
+3) You need an integer number, so let’s round it up. Notice that the user will pay the same amount every month for 97 months, and for 98th month the user will pay 0.71... of the monthly payment. So, there are 98 months to pay.
+
+n = 98n=98
+
+4) Finally, you need to convert “98 months” to “8 years and 2 months”, so it is more readable and understandable for the user.
+```
+Consider other examples:
+
+#### Example 2:
+```
+What do you want to calculate?
+type "n" for number of monthly payments,
+type "a" for annuity monthly payment amount,
+type "p" for credit principal:
+> a
+Enter the credit principal:
+> 1000000
+Enter the number of periods:
+> 60
+Enter the credit interest:
+> 10
+Your monthly payment = 21248!
+```
+#### Example 3:
+```
+What do you want to calculate?
+type "n" for number of monthly payments,
+type "a" for annuity monthly payment amount,
+type "p" for credit principal:
+> p
+Enter the annuity payment:
+> 8721.8
+Enter the number of periods:
+> 120
+Enter the credit interest:
+> 5.6
+Your credit principal = 800000!
+```
