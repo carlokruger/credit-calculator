@@ -2,6 +2,7 @@ import math
 import sys
 
 args = sys.argv
+print(args)
 arg_dict = {}
 if len(args) == 5:
     for arg in args:
@@ -12,10 +13,10 @@ if len(args) == 5:
             key = arg[2:eq]
             value = arg[eq + 1:]
             arg_dict.update({key: value})
+elif len(args) != 5:
+    print("Incorrect parameters")
 
-print(arg_dict)
-
-if arg_dict["type"] == "annuity":
+if arg_dict["type"] == "annuity" and len(args) == 5:
     if "periods" not in arg_dict:
         principal = int(arg_dict["principal"])
         payment = float(arg_dict['payment'])
@@ -60,3 +61,15 @@ if arg_dict["type"] == "annuity":
         overpayment = int((payment * term) - principal)
         print("Your credit principal = {}!".format(principal))
         print("Overpayment = ", overpayment)
+
+elif arg_dict["type"] == "diff" and len(args) == 5:
+    print(arg_dict)
+    principal = int(arg_dict["principal"])
+    term = int(arg_dict["periods"])
+    interest = float(arg_dict["interest"]) / 1200
+    total = 0
+    for x in range(1, term + 1):
+        payment = math.ceil((principal / term) + interest * (principal - ((principal * (x - 1)) / term)))
+        total += payment
+        print("Month {}: payment is {}".format(x, payment))
+    print("Overpayment = ", int(total - principal))
