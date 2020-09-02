@@ -1,30 +1,62 @@
 import math
+import sys
 
-principal = int(input("Enter the credit principal:"))
-
-print("What do you want to calculate?")
-print('type "m" - for number of monthly payments,')
-print('type "p" - for the monthly payment:')
-calc_type = input()
-
-if calc_type == "m":
-    payment = int(input("Enter the monthly payment:"))
-    term = int(round(principal / payment))
-    if term == 1:
-        print("It will take {} month to repay the credit".format(term))
-    elif term > 1:
-        print("It will take {} months to repay the credit".format(term))
-
-elif calc_type == "p":
-    term = int(input("Enter the number of months:"))
-    payment = principal / term
-    frac, whole = math.modf(payment)
-    if frac == 0.0:
-        print("Your monthly payment = ", int(payment))
-    elif frac != 0.0:
-        if frac >= 0.5:
-            payment = int(round(payment))
+args = sys.argv
+arg_dict = {}
+if len(args) == 5:
+    for arg in args:
+        if arg == "creditcalc.py":
+            pass
         else:
-            payment = int(round(payment)) + 1
-        final_payment = 1000 - (payment * (term - 1))
-        print("Your monthly payment = {} and the last payment = {}.".format(payment, final_payment))
+            eq = arg.find("=")
+            key = arg[2:eq]
+            value = arg[eq + 1:]
+            arg_dict.update({key: value})
+
+print(arg_dict)
+
+if arg_dict["type"] == "annuity":
+    if "periods" not in arg_dict:
+        principal = int(arg_dict["principal"])
+        payment = float(arg_dict['payment'])
+        interest = float(arg_dict["interest"]) / 1200
+        x = payment / (payment - interest * principal)
+        term = math.ceil(math.log(x, 1 + interest))
+        overpayment = int((payment * term) - principal)
+        print(term)
+        if term < 12:
+            print("It will take {} months to repay this credit!".format(term))
+            print("Overpayment = ", overpayment)
+        elif term == 12:
+            print("It will take 1 year to repay this credit!")
+            print("Overpayment = ", overpayment)
+        elif term > 12:
+            years = term // 12
+            months = term % 12
+            if months != 0:
+                print("It will take {} years and {} months to repay this credit!".format(years, months))
+                print("Overpayment = ", overpayment)
+            elif months == 0:
+                print("It will take {} years to repay this credit!".format(years))
+                print("Overpayment = ", overpayment)
+
+    elif "payment" not in arg_dict:
+        principal = int(arg_dict["principal"])
+        term = int(arg_dict["periods"])
+        interest = float(arg_dict["interest"]) / 1200
+        payment = math.ceil(interest * (1 / (1 - (1 + interest) ** (-term))) * principal)
+        overpayment = (payment * term) - principal
+        print("Your annuity payment = {}!".format(payment))
+        print("Overpayment = ", overpayment)
+
+    elif "principal" not in arg_dict:
+        payment = float(arg_dict["payment"])
+        term = int(arg_dict["periods"])
+        interest = float(arg_dict["interest"]) / 1200
+        denom = (1 + interest) ** term - 1
+        numer = interest * (1 + interest) ** term
+        x = numer / denom
+        principal = math.floor(payment / x)
+        overpayment = int((payment * term) - principal)
+        print("Your credit principal = {}!".format(principal))
+        print("Overpayment = ", overpayment)
