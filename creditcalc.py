@@ -2,8 +2,10 @@ import math
 import sys
 
 args = sys.argv
-print(args)
+
 arg_dict = {}
+errors = 0
+
 if len(args) == 5:
     for arg in args:
         if arg == "creditcalc.py":
@@ -14,9 +16,34 @@ if len(args) == 5:
             value = arg[eq + 1:]
             arg_dict.update({key: value})
 elif len(args) != 5:
-    print("Incorrect parameters")
+    errors += 1
 
-if arg_dict["type"] == "annuity" and len(args) == 5:
+if "type" in arg_dict:
+    if arg_dict["type"] not in ["diff", "annuity"]:
+        errors += 1
+else:
+    errors += 1
+
+if "type" in arg_dict and arg_dict["type"] == "diff" and "payment" in arg_dict:
+    errors += 1
+
+if "principal" in arg_dict:
+    if float(arg_dict["principal"]) < 0:
+        errors += 1
+
+if "periods" in arg_dict:
+    if float(arg_dict["periods"]) < 0:
+        errors += 1
+
+if "payment" in arg_dict:
+    if float(arg_dict["payment"]) < 0:
+        errors += 1
+
+if "interest" in arg_dict:
+    if float(arg_dict["interest"]) < 0:
+        errors += 1
+
+if "type" in arg_dict and arg_dict["type"] == "annuity" and errors == 0:
     if "periods" not in arg_dict:
         principal = int(arg_dict["principal"])
         payment = float(arg_dict['payment'])
@@ -62,8 +89,7 @@ if arg_dict["type"] == "annuity" and len(args) == 5:
         print("Your credit principal = {}!".format(principal))
         print("Overpayment = ", overpayment)
 
-elif arg_dict["type"] == "diff" and len(args) == 5:
-    print(arg_dict)
+elif "type" in arg_dict and arg_dict["type"] == "diff" and errors == 0:
     principal = int(arg_dict["principal"])
     term = int(arg_dict["periods"])
     interest = float(arg_dict["interest"]) / 1200
@@ -73,3 +99,6 @@ elif arg_dict["type"] == "diff" and len(args) == 5:
         total += payment
         print("Month {}: payment is {}".format(x, payment))
     print("Overpayment = ", int(total - principal))
+
+elif errors > 0:
+    print("Incorrect parameters")
